@@ -1,0 +1,44 @@
+VENV := .venv
+PYTHON := $(VENV)/bin/python3
+
+ANDROID_HOME ?= $(HOME)/Library/Android/sdk
+ANDROID_SDK_ROOT ?= $(ANDROID_HOME)
+
+export ANDROID_HOME
+export ANDROID_SDK_ROOT
+export PATH := $(ANDROID_HOME)/emulator:$(ANDROID_HOME)/platform-tools:$(PATH)
+
+
+install: venv install-requirements
+
+venv:
+	@echo "🔹 Creating virtual environment..."
+	@test -d $(VENV) || python3 -m venv $(VENV)
+
+install-requirements:
+	@echo "🔹 Installing Python dependencies..."
+	$(PYTHON) -m pip install --upgrade pip
+	$(PYTHON) -m pip install -r requirements.txt
+	@echo "✅ All dependencies are installed."
+
+test:
+	@echo "🔹 Running pytest..."
+	$(PYTHON) -m pytest -v -s
+	@echo "✅ Tests completed."
+
+test-file:
+	@echo "🔹 Running pytest for file: $(FILE)..."
+	$(PYTHON) -m pytest -v -s $(FILE)
+	@echo "✅ Tests completed."
+
+.PHONY: allure-report
+
+allure-report:
+	@echo "🧹 Cleaning old allure results..."
+	rm -rf allure-results allure-report
+	@echo "🔹 Running pytest with Allure..."
+	$(PYTHON) -m pytest $(FILE) --alluredir=allure-results
+	@echo "🔹 Generating Allure report..."
+	allure generate allure-results -o allure-report --clean
+	@echo "🔹 Opening Allure report..."
+	allure open allure-report
