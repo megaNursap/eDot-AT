@@ -5,7 +5,13 @@ from utils.mobile.locator.newCustomerRegistration.document_page import DocumentL
 from utils.mobile.locator.newCustomerRegistration.sign_page import SignPageLocators
 from utils.mobile.locator.masterOutlet.master_outlet_page import MasterOutletLocators
 from selenium.common.exceptions import TimeoutException
-from utils.mobile.helper_mobile import *
+from utils.mobile.helper_mobile import (
+    wait_and_click,
+    wait_and_send_keys,
+    wait_for_element,
+    scroll_to_element,
+    draw_signature,
+)
 from utils.mobile.features import login_driver
 from utils.mobile.test_data_mobile import TestDataMobile
 import time
